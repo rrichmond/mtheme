@@ -64,7 +64,7 @@
     .is choice,
     none/.code={%
       \setbeamertemplate{headline}[plain]
-      \setbeamertemplate{frametitle}[plain]
+      % \setbeamertemplate{frametitle}[plain]
       \setbeamertemplate{footline}[plain]
     },
     head/.code={\pgfkeys{/metropolis/outer/progressbar=none}
@@ -116,6 +116,7 @@
     numbering=counter,
     progressbar=none,
     frametitleformat=lowercase,
+    titlelength=regular,
   }
 }
 %    \end{macrocode}%
@@ -190,18 +191,45 @@
 % \begin{macro}{frametitle}
 %
 % Templates for the frame title, which is optionally underlined with a
-% progress bar.
+% progress bar. Allows for a fixed length header. 
 %
 %    \begin{macrocode}
-\newlength{\@metropolis@frametitlestrut}
+
+\defbeamertemplate{frametitle}{plainlong}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=5ex]{frametitle}
+    \usebeamerfont{frametitle}%
+    \begingroup
+    \hyphenpenalty 10000
+    \exhyphenpenalty 10000
+    \begin{beamercolorbox}[wd=.8\paperwidth,leftskip=0.3cm,ht=5ex,dp=1.5ex]{frametitle}
+      \smash{\parbox[t]{\textwidth}{\insertframetitle}}\vfill\null
+    \end{beamercolorbox}
+    \endgroup
+  \end{beamercolorbox}%
+}
+
 \defbeamertemplate{frametitle}{plain}{%
   \nointerlineskip%
   \begin{beamercolorbox}[%
-      wd=\paperwidth,%
-      sep=1.5ex,%
+    wd=\paperwidth,%
+    sep=1.5ex,%
     ]{frametitle}%
-  \@metropolis@frametitlestrut\insertframetitle\@metropolis@frametitlestrut%
+    \@metropolis@frametitlestrut\insertframetitle\@metropolis@frametitlestrut%
   \end{beamercolorbox}%
+}
+
+\newlength{\@metropolis@frametitlestrut}
+
+\pgfkeys{
+  /metropolis/outer/titlelength/.cd,
+  .is choice,
+  long/.code={%
+    \setbeamertemplate{frametitle}[plainlong]
+  },
+  regular/.code={%
+    \setbeamertemplate{frametitle}[plain]
+  },
 }
 %    \end{macrocode}
 % \end{macro}
